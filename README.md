@@ -22,3 +22,6 @@ gen_file_type: markdown
 运行 `testGrab.exe` 即可
 
 最后生成文件在 `./docs` 目录下
+
+代码比较简单，可以直接拉下来自己修改，或者提issue，我会尽快回复
+
