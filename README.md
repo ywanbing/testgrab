@@ -25,3 +25,9 @@ gen_file_type: markdown
 
 代码比较简单，可以直接拉下来自己修改，或者提issue，我会尽快回复
 
+
+## md文件转pdf 
+
+前提是下载了 wps 
+
+用一个任意的md 文档编辑器打开，选择打印，然后选择 wps pdf 既可转为pdf。
