@@ -54,7 +54,11 @@ func (s *Session) WriteFile() {
 	case string(constant.FileType_MD):
 		for _, content := range s.CourseContent {
 			ct, _ := content.GenMarkDownFile()
-			os.WriteFile("./docs/"+content.Name+".md", ct, 0666)
+			err := os.WriteFile("./docs/"+content.Name+".md", ct, 0666)
+			if err != nil {
+				log.Println("生成文件:", "./docs/"+content.Name+".md", "出现了问题：", err.Error())
+				continue
+			}
 			log.Println("生成文件:", "./docs/"+content.Name+".md")
 		}
 	case string(constant.FileType_JSON):

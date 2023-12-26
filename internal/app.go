@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"testGrab/internal/config"
+	"testGrab/internal/exit"
 	"testGrab/internal/session"
 )
 
@@ -29,4 +30,8 @@ func Run() {
 	}
 
 	app.WriteFile()
+
+	log.Println("请查看docs目录下的文件")
+	log.Println("按下 Ctrl+C 退出程序")
+	exit.WaitSignal()
 }
