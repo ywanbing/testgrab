@@ -50,18 +50,36 @@ func (s *Session) GetCourseNameById(id string) string {
 
 // WriteFile 写入文件
 func (s *Session) WriteFile() {
+	checkDir("./docs")
+
 	switch config.GenFileType() {
 	case string(constant.FileType_MD):
 		for _, content := range s.CourseContent {
 			ct, _ := content.GenMarkDownFile()
-			err := os.WriteFile("./docs/"+content.Name+".md", ct, 0666)
+			filePath := "./docs/" + content.Name
+			if config.IsSimple() {
+				filePath += "_simple"
+			}
+
+			filePath += ".md"
+			err := os.WriteFile(filePath, ct, 0666)
 			if err != nil {
-				log.Println("生成文件:", "./docs/"+content.Name+".md", "出现了问题：", err.Error())
+				log.Println("生成文件:", filePath, "出现了问题：", err.Error())
 				continue
 			}
-			log.Println("生成文件:", "./docs/"+content.Name+".md")
+			log.Println("生成文件:", filePath)
 		}
 	case string(constant.FileType_JSON):
 		// TODO 还没有搞
+	}
+}
+
+func checkDir(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.MkdirAll(path, 0666)
+		if err != nil {
+			log.Println("创建目录:", path, "出现了问题：", err.Error())
+		}
+		log.Println("检查到没有存放文档的目录，创建目录:", path)
 	}
 }
