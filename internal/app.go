@@ -1,0 +1,32 @@
+package internal
+
+import (
+	"log"
+	"time"
+
+	"testGrab/internal/config"
+	"testGrab/internal/session"
+)
+
+func Run() {
+	app := session.NewSession()
+	if !app.Login(config.GetName(), config.GetPwd()) {
+		return
+	}
+
+	if !app.Home() {
+		return
+	}
+
+	for _, course := range app.CourseList {
+		for i := 0; i < config.GetLoopNum(); i++ {
+			log.Println("start "+course.Name+" ----> ", i)
+			if !app.Course(course.BatchId, course.Id) {
+				return
+			}
+			time.Sleep(1 * time.Second)
+		}
+	}
+
+	app.WriteFile()
+}
