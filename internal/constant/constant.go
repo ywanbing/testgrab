@@ -15,4 +15,6 @@ type FileType string
 const (
 	FileType_MD   FileType = "markdown"
 	FileType_JSON FileType = "json"
+	FileType_HTML FileType = "html"
+	FileType_PDF  FileType = "pdf"
 )

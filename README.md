@@ -15,7 +15,7 @@ batch_id: {登录首页网址上面的batch_id}
 loop_num: 10
 #是否简单模式（简单模式下：选择题只保留正确的选项，默认不是简单模式）
 simple: false
-# 生成文件的类型 目前只支持 markdown
+# 生成文件的类型 目前支持 markdown html pdf
 gen_file_type: markdown
 
 ```
@@ -30,6 +30,8 @@ gen_file_type: markdown
 2. 提取多次考试的答案，并自动去重，生成一个文件
 3. 支持带有图片的题目和答案
 4. 生成的`md`文件可以很方便转为pdf
+5. 现在支持直接生成pdf和html格式
+6. 生成pdf需要`wkhtmltopdf`，我已经打包在tools目录下，可以自行下载
 
 支持的课程（本人考试科目），稳定输出
 - 高等数学（工专）
@@ -41,10 +43,3 @@ gen_file_type: markdown
 其他课程未测试，欢迎提issue
 - 英语不支持
 
-## md文件转pdf 
-
-前提是下载了 wps 
-
-用一个任意的md 文档编辑器打开，选择打印，然后选择 wps pdf 既可转为pdf。
-
-当然其他的也可以，这个只是我自己使用，比较方便。

@@ -34,7 +34,7 @@ func init() {
 	}
 
 	switch DefCfg.GenFileType {
-	case string(constant.FileType_MD), string(constant.FileType_JSON):
+	case string(constant.FileType_MD), string(constant.FileType_JSON), string(constant.FileType_HTML), string(constant.FileType_PDF):
 	default:
 		panic("must specify correct gen_file_type, has [markdown|json]")
 	}

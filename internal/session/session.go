@@ -3,8 +3,10 @@ package session
 import (
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/gocolly/colly"
+	"testGrab/internal/common"
 	"testGrab/internal/config"
 	"testGrab/internal/constant"
 )
@@ -74,6 +76,51 @@ func (s *Session) WriteFile() {
 		}
 	case string(constant.FileType_JSON):
 		// TODO 还没有搞
+	case string(constant.FileType_HTML):
+		for _, content := range s.CourseContent {
+			ct, _ := content.GenMarkDownFile()
+			filePath := "./docs/" + content.Name
+			if config.IsSimple() {
+				filePath += "_simple"
+			}
+
+			filePath += ".html"
+			html := common.GetHtml(content.Name, ct)
+			err := os.WriteFile(filePath, html, 0666)
+			if err != nil {
+				log.Println("生成文件:", filePath, "出现了问题：", err.Error())
+				continue
+			}
+			log.Println("生成文件:", filePath)
+		}
+	case string(constant.FileType_PDF):
+		for _, content := range s.CourseContent {
+			ct, _ := content.GenMarkDownFile()
+			filePath := "./docs/" + content.Name
+			if config.IsSimple() {
+				filePath += "_simple"
+			}
+
+			filePath += ".pdf"
+
+			// 先生成html
+			html := common.GetHtml(content.Name, ct)
+			temp, err := os.CreateTemp(os.TempDir(), "*.html")
+			if err != nil {
+				log.Println("生成html临时文件:", temp, "出现了问题：", err.Error())
+				continue
+			}
+			defer os.Remove(temp.Name())
+			_, _ = temp.Write(html)
+			_ = temp.Close()
+
+			err = exec.Command("./tools/wkhtmltopdf.exe", temp.Name(), filePath).Run()
+			if err != nil {
+				log.Println("生成文件:", filePath, "出现了问题：", err.Error())
+				continue
+			}
+			log.Println("生成文件:", filePath)
+		}
 	}
 }
 
