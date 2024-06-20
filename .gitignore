@@ -27,3 +27,4 @@ go.sum
 docs/
 
 *.zip
+!wkhtmltopdf.exe
