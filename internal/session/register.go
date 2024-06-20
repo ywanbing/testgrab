@@ -37,9 +37,16 @@ func (s *Session) RegisterResponseHandler() {
 		reqUrl := r.Request.URL.String()
 		switch reqUrl {
 		case constant.LOGIN_URL:
+			log.Println(string(r.Body))
+			if strings.Contains(string(r.Body), "登录成功") {
+				log.Println("登录成功")
+			} else {
+				log.Fatal("登录失败")
+				return
+			}
 			// 设置cookie
 			cookies := r.Headers.Values("Set-Cookie")
-			s.SetCookies("www.zk028.cn", common.Parse(cookies))
+			_ = s.SetCookies("www.zk028.cn", common.Parse(cookies))
 		}
 	})
 }
@@ -86,12 +93,18 @@ func (s *Session) RegisterOnHTML() {
 				pdtHash:       make(map[string]struct{}, 10),
 				tiankongs:     make([]*TKT, 0, 10),
 				tiankongsHash: make(map[string]struct{}, 10),
+				mcjs:          make([]*MCJS, 0, 10),
+				mcjsHash:      make(map[string]struct{}, 10),
 				jds:           make([]*JDT, 0, 10),
 				jdsHash:       make(map[string]struct{}, 10),
 				jss:           make([]*JST, 0, 10),
 				jssHash:       make(map[string]struct{}, 10),
 				zhs:           make([]*ZHT, 0, 10),
 				zhsHash:       make(map[string]struct{}, 10),
+				lst:           make([]*LST, 0, 10),
+				lstHash:       make(map[string]struct{}, 10),
+				qtt:           make([]*QTT, 0, 10),
+				qttHash:       make(map[string]struct{}, 10),
 			}
 		}
 

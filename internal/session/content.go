@@ -19,12 +19,18 @@ func (s *Session) parseContent(element *colly.HTMLElement, courseContent *Course
 			timuType = constant.Bool
 		case strings.Contains(el.Text, "填空题"):
 			timuType = constant.FILL
-		case strings.Contains(el.Text, "简答题") || strings.Contains(el.Text, "名词解释题"):
+		case strings.Contains(el.Text, "名词解释题"):
+			timuType = constant.NOMENON
+		case strings.Contains(el.Text, "简答题"):
 			timuType = constant.SIMPLE
 		case strings.Contains(el.Text, "计算题"):
 			timuType = constant.CALCULATE
 		case strings.Contains(el.Text, "综合题"):
 			timuType = constant.COMPLEX
+		case strings.Contains(el.Text, "论述题"):
+			timuType = constant.DISCUSSION
+		default:
+			timuType = constant.UNKNOWN
 		}
 	})
 
@@ -37,10 +43,16 @@ func (s *Session) parseContent(element *colly.HTMLElement, courseContent *Course
 		getTKT(element, courseContent)
 	case constant.SIMPLE:
 		getJDT(element, courseContent)
+	case constant.NOMENON:
+		getMCJST(element, courseContent)
 	case constant.CALCULATE:
 		getJST(element, courseContent)
 	case constant.COMPLEX:
 		getZHT(element, courseContent)
+	case constant.DISCUSSION:
+		getLST(element, courseContent)
+	case constant.UNKNOWN:
+		getQTT(element, courseContent)
 	}
 }
 
@@ -180,6 +192,41 @@ func getJDT(element *colly.HTMLElement, courseContent *CourseContent) {
 	})
 }
 
+// 获取名词解析题
+func getMCJST(element *colly.HTMLElement, courseContent *CourseContent) {
+	element.ForEach(".item_div", func(_ int, el *colly.HTMLElement) {
+		var mcjs = &MCJS{}
+		el.ForEach(".item_title", func(_ int, el *colly.HTMLElement) {
+			var imgAddr string
+			el.ForEach("p", func(_ int, el *colly.HTMLElement) {
+				imgAddr = getImgAddr(el)
+			})
+			// 没有图片直接获取题目
+			if imgAddr == "" {
+				mcjs.TIMU = strings.SplitN(el.Text, "、", 2)[1]
+			} else {
+				mcjs.TIMU = imgAddr
+			}
+		})
+		el.ForEach(".item_answer", func(_ int, el *colly.HTMLElement) {
+			var imgAddr = getImgAddr(el)
+			mcjs.ANSWER = el.Text + imgAddr
+		})
+		if mcjs.ANSWER == "" {
+			el.ForEach(".div_answer", func(_ int, el *colly.HTMLElement) {
+				mcjs.ANSWER = el.Text + getImgAddr(el)
+			})
+		}
+
+		hash := mcjs.Hash()
+		if _, ok := courseContent.mcjsHash[hash]; ok {
+			return
+		}
+		courseContent.mcjs = append(courseContent.mcjs, mcjs)
+		courseContent.mcjsHash[hash] = struct{}{}
+	})
+}
+
 // 获取计算题
 func getJST(element *colly.HTMLElement, courseContent *CourseContent) {
 	element.ForEach(".item_div", func(_ int, el *colly.HTMLElement) {
@@ -237,6 +284,56 @@ func getZHT(element *colly.HTMLElement, courseContent *CourseContent) {
 		}
 		courseContent.zhs = append(courseContent.zhs, zht)
 		courseContent.zhsHash[hash] = struct{}{}
+	})
+}
+
+// 获取论述题
+func getLST(element *colly.HTMLElement, courseContent *CourseContent) {
+	element.ForEach(".item_div", func(_ int, el *colly.HTMLElement) {
+		var lst = &LST{}
+		el.ForEach(".item_title", func(_ int, el *colly.HTMLElement) {
+			lst.TIMU = strings.SplitN(el.Text, "、", 2)[1]
+		})
+		el.ForEach(".item_answer", func(_ int, el *colly.HTMLElement) {
+			var imgAddr = getImgAddr(el)
+			lst.ANSWER = el.Text + imgAddr
+		})
+		if lst.ANSWER == "" {
+			el.ForEach(".div_answer", func(_ int, el *colly.HTMLElement) {
+				lst.ANSWER = el.Text + getImgAddr(el)
+			})
+		}
+		hash := lst.Hash()
+		if _, ok := courseContent.lstHash[hash]; ok {
+			return
+		}
+		courseContent.lst = append(courseContent.lst, lst)
+		courseContent.lstHash[hash] = struct{}{}
+	})
+}
+
+// 获取其他题
+func getQTT(element *colly.HTMLElement, courseContent *CourseContent) {
+	element.ForEach(".item_div", func(_ int, el *colly.HTMLElement) {
+		var qtt = &QTT{}
+		el.ForEach(".item_title", func(_ int, el *colly.HTMLElement) {
+			qtt.TIMU = strings.SplitN(el.Text, "、", 2)[1]
+		})
+		el.ForEach(".item_answer", func(_ int, el *colly.HTMLElement) {
+			var imgAddr = getImgAddr(el)
+			qtt.ANSWER = el.Text + imgAddr
+		})
+		if qtt.ANSWER == "" {
+			el.ForEach(".div_answer", func(_ int, el *colly.HTMLElement) {
+				qtt.ANSWER = el.Text + getImgAddr(el)
+			})
+		}
+		hash := qtt.Hash()
+		if _, ok := courseContent.qttHash[hash]; ok {
+			return
+		}
+		courseContent.qtt = append(courseContent.qtt, qtt)
+		courseContent.qttHash[hash] = struct{}{}
 	})
 }
 

@@ -20,6 +20,11 @@ func (s *Session) Login(name string, pwd string) bool {
 		return false
 	}
 
+	if s.killed {
+		log.Println("Login failed")
+		return false
+	}
+
 	return true
 }
 
@@ -29,13 +34,23 @@ func (s *Session) Home() bool {
 		log.Println("Visit home err:" + err.Error())
 		return false
 	}
+
+	if s.killed {
+		log.Println("visit home err")
+		return false
+	}
 	return true
 }
 
 func (s *Session) Course(batchId string, courseId string) bool {
 	err := s.Visit(fmt.Sprintf(constant.Course_URL, batchId, courseId))
 	if err != nil {
-		log.Println("Visit home err:" + err.Error())
+		log.Println("visit course err:" + err.Error())
+		return false
+	}
+
+	if s.killed {
+		log.Println("visit course err")
 		return false
 	}
 	return true

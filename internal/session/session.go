@@ -17,6 +17,9 @@ type Session struct {
 
 	// 课程内容
 	CourseContent map[string]*CourseContent
+
+	// 出错强制退出
+	killed bool
 }
 
 func NewSession() *Session {

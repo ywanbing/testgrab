@@ -64,6 +64,15 @@ func (c *CourseContent) GenMarkDownFile() ([]byte, error) {
 		}
 	}
 
+	if len(c.mcjs) > 0 {
+		log.Println(c.Name, "获取到 [", len(c.mcjs), "] 个名称解释题")
+		buff.WriteString("## 名称解释题\n\n")
+		for i, mcjs := range c.mcjs {
+			buff.WriteString(fmt.Sprintf("%d. %s  \n", i+1, mcjs.TIMU))
+			buff.WriteString(fmt.Sprintf("%s  \n\n", mcjs.ANSWER))
+		}
+	}
+
 	if len(c.jds) > 0 {
 		log.Println(c.Name, "获取到 [", len(c.jds), "] 个简答题")
 		buff.WriteString("## 简答题\n\n")
@@ -88,6 +97,24 @@ func (c *CourseContent) GenMarkDownFile() ([]byte, error) {
 		for i, zht := range c.zhs {
 			buff.WriteString(fmt.Sprintf("%d. %s  \n", i+1, zht.TIMU))
 			buff.WriteString(fmt.Sprintf("%s  \n\n", zht.ANSWER))
+		}
+	}
+
+	if len(c.lst) > 0 {
+		log.Println(c.Name, "获取到 [", len(c.lst), "] 个论述题")
+		buff.WriteString("## 论述题\n\n")
+		for i, lst := range c.lst {
+			buff.WriteString(fmt.Sprintf("%d. %s  \n", i+1, lst.TIMU))
+			buff.WriteString(fmt.Sprintf("%s  \n\n", lst.ANSWER))
+		}
+	}
+
+	if len(c.qtt) > 0 {
+		log.Println(c.Name, "获取到 [", len(c.qtt), "] 个其他题")
+		buff.WriteString("## 其他题\n\n")
+		for i, qtt := range c.qtt {
+			buff.WriteString(fmt.Sprintf("%d. %s  \n", i+1, qtt.TIMU))
+			buff.WriteString(fmt.Sprintf("%s  \n\n", qtt.ANSWER))
 		}
 	}
 

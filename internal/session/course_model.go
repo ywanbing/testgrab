@@ -31,6 +31,9 @@ type CourseContent struct {
 	tiankongs     []*TKT
 	tiankongsHash map[string]struct{}
 
+	mcjs     []*MCJS
+	mcjsHash map[string]struct{}
+
 	jds     []*JDT
 	jdsHash map[string]struct{}
 
@@ -39,6 +42,12 @@ type CourseContent struct {
 
 	zhs     []*ZHT
 	zhsHash map[string]struct{}
+
+	lst     []*LST
+	lstHash map[string]struct{}
+
+	qtt     []*QTT
+	qttHash map[string]struct{}
 }
 
 type XZT struct {
@@ -98,6 +107,17 @@ func (x *JDT) Hash() string {
 	return hex.EncodeToString(sum[:])
 }
 
+type MCJS struct {
+	TIMU   string
+	ANSWER string
+}
+
+// Hash 计算题目的 hash值
+func (x *MCJS) Hash() string {
+	sum := sha1.Sum([]byte(x.TIMU))
+	return hex.EncodeToString(sum[:])
+}
+
 type ZHT struct {
 	TIMU   string
 	ANSWER string
@@ -105,6 +125,29 @@ type ZHT struct {
 
 // Hash 计算题目的 hash值
 func (x *ZHT) Hash() string {
+	sum := sha1.Sum([]byte(x.TIMU))
+	return hex.EncodeToString(sum[:])
+}
+
+type LST struct {
+	TIMU   string
+	ANSWER string
+}
+
+// Hash 计算题目的 hash值
+func (x *LST) Hash() string {
+	sum := sha1.Sum([]byte(x.TIMU))
+	return hex.EncodeToString(sum[:])
+}
+
+// QTT 其他未分类题目
+type QTT struct {
+	TIMU   string
+	ANSWER string
+}
+
+// Hash 计算题目的 hash值
+func (x *QTT) Hash() string {
 	sum := sha1.Sum([]byte(x.TIMU))
 	return hex.EncodeToString(sum[:])
 }

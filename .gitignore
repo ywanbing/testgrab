@@ -23,3 +23,7 @@ config.yaml
 go.sum
 
 .idea
+
+docs/
+
+*.zip
