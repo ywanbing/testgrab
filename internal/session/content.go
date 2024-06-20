@@ -349,7 +349,7 @@ func getImgAddr(el *colly.HTMLElement) string {
 // genImgAddr 生成MD图片地址
 func genImgAddr(addr string) string {
 	switch config.GenFileType() {
-	case string(constant.FileType_MD):
+	case string(constant.FileType_MD), string(constant.FileType_HTML), string(constant.FileType_PDF):
 		return "![](" + addr + ")"
 	case string(constant.FileType_JSON):
 		return addr
