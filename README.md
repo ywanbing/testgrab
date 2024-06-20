@@ -19,6 +19,11 @@ simple: false
 gen_file_type: markdown
 
 ```
+
+需要注意：生成pdf需要`wkhtmltopdf`，我已经打包在tools目录下。
+
+执行前的应该在 `testgrab.exe` 目录下有 `./tools/wkhtmltopdf.exe`，如果没有请自行下载。
+
 运行 `testGrab.exe` 即可
 
 最后生成文件在 `./docs` 目录下
