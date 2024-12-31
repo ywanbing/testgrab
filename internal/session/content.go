@@ -72,6 +72,12 @@ func getXZT(element *colly.HTMLElement, courseContent *CourseContent) {
 			} else {
 				xzt.TIMU = imgAddr
 			}
+
+			// 可能还会有图片，需要再次获取
+			hasImg := getImgAddr(el)
+			if imgAddr == "" && hasImg != "" {
+				xzt.TIMU += hasImg
+			}
 		})
 		el.ForEach(".item_li_option_ul_li", func(_ int, el *colly.HTMLElement) {
 			xzt.OPTION = append(xzt.OPTION, el.Text+getImgAddr(el))
